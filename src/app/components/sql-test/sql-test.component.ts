@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { SqliteService } from '../../services/sqlite.service';
+import { SqliteService } from '../../services/sqlite/sqlite.service';
 
 @Component({
   selector: 'app-sql-test',

@@ -14,7 +14,7 @@ import { home, settings } from 'ionicons/icons';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { environment } from './environments/environment';
-import { SqliteService } from './app/services/sqlite.service';
+import { SqliteService } from './app/services/sqlite/sqlite.service';
 
 if (environment.production) {
   enableProdMode();
