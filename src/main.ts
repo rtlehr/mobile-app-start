@@ -1,5 +1,5 @@
 // src/main.ts
-import { enableProdMode, APP_INITIALIZER } from '@angular/core';
+import { enableProdMode, APP_INITIALIZER, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import {
   provideRouter,
@@ -8,6 +8,7 @@ import {
   RouteReuseStrategy,
 } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
+import { HttpClientModule } from '@angular/common/http'; // ✅ Import HttpClientModule
 import { addIcons } from 'ionicons';
 import { home, settings } from 'ionicons/icons';
 
@@ -31,6 +32,7 @@ export function initSqlite(sqlite: SqliteService) {
 bootstrapApplication(AppComponent, {
   providers: [
     provideIonicAngular(),
+    importProvidersFrom(HttpClientModule), // ✅ Provide HttpClientModule
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideRouter(routes, withPreloading(PreloadAllModules)),
     SqliteService,

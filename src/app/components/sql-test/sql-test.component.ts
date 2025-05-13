@@ -18,15 +18,6 @@ export class SqlTestComponent implements OnInit {
 
   async ngOnInit() {
     try {
-      // Create a sample table and insert data
-      await this.sqliteService.executeQuery(`
-        CREATE TABLE IF NOT EXISTS users (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          name TEXT
-        )
-      `);
-      await this.sqliteService.executeQuery('INSERT INTO users (name) VALUES (?)', ['Bob Dillion']);
-      await this.sqliteService.executeQuery('INSERT INTO users (name) VALUES (?)', ['Chet Cheterbrain']);
       const result = await this.sqliteService.executeQuery('SELECT * FROM users');
       this.results = result.values;
     } catch (error) {

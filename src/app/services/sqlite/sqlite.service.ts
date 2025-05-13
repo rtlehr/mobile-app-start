@@ -8,6 +8,9 @@ import {
 } from '@capacitor-community/sqlite';
 import initSqlJs, { SqlJsStatic, Database as SqlJsDatabase } from 'sql.js';
 
+import { HttpClient } from '@angular/common/http';
+
+
 @Injectable({
   providedIn: 'root',
 })
@@ -17,33 +20,33 @@ export class SqliteService {
   private sqlJsDb: SqlJsDatabase | null = null;
   private isBrowser = Capacitor.getPlatform() === 'web';
 
-  constructor() {}
+  
+  constructor(private http: HttpClient) {}
 
   async initialize(): Promise<void> {
-    if (this.isBrowser) {
-      // —— Browser (sql.js) ——
-      const SQL = (await initSqlJs({
-        locateFile: (file: string) => `/assets/${file}`,
-      })) as SqlJsStatic;
-      this.sqlJsDb = new SQL.Database();
-      console.log('sql.js initialized for browser');
-    } else {
-      // —— Native (Capacitor SQLite) ——
-      // 1) create the SQLiteConnection instance
-      this.sqlite = new SQLiteConnection(CapacitorSQLite);
-      // 2) open (or create) your named DB
-      this.db = await this.sqlite.createConnection(
-        'myapp',        // database name
-        false,          // encrypted?
-        'no-encryption',// encryption mode
-        1,              // version
-        false           // readonly?
-      );
+  if (this.isBrowser) {
+    const SQL = (await initSqlJs({
+      locateFile: (file: string) => `/assets/${file}`,
+    })) as SqlJsStatic;
 
-      await this.db.open();
-      console.log('Capacitor SQLite initialized for native');
-    }
+    this.sqlJsDb = new SQL.Database();
+    console.log('sql.js initialized for browser');
+    await this.loadAndExecuteSchema();
+  } else {
+    this.sqlite = new SQLiteConnection(CapacitorSQLite);
+    this.db = await this.sqlite.createConnection(
+      'myapp', 
+      false, 
+      'no-encryption', 
+      1, 
+      false
+    );
+    await this.db.open();
+    console.log('Capacitor SQLite initialized for native');
+    await this.loadAndExecuteSchema();
   }
+}
+
 
 async executeQuery(
   query: string,
@@ -92,4 +95,28 @@ async executeQuery(
       }
     }
   }
+
+  private async loadAndExecuteSchema(): Promise<void> {
+  const schemaSql = await this.http
+    .get('/assets/sqlSchema/schema.sql', { responseType: 'text' })
+    .toPromise();
+
+  if (!schemaSql) {
+    throw new Error('Failed to load schema.sql');
+  }
+
+  if (this.isBrowser && this.sqlJsDb) {
+    this.sqlJsDb.run(schemaSql);
+  } else if (this.db) {
+    const statements = schemaSql
+      .split(';')
+      .map(stmt => stmt.trim())
+      .filter(stmt => stmt.length > 0);
+
+    for (const stmt of statements) {
+      await this.db.execute(stmt);
+    }
+  }
+}
+
 }
