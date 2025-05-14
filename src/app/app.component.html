@@ -1,5 +1,7 @@
 <ion-app>
 
+  <app-splash-screen *ngIf="!isAppReady"></app-splash-screen>
+  
   <!-- Side Menu -->
   <ion-menu contentId="main-content" type="overlay">
     <ion-header>

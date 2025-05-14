@@ -1,0 +1,18 @@
+#splash-container {
+  /* cover the entire viewport */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  /* center any inner content both vertically and horizontally */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* solid background (adjust to your brand color) */
+  background-color: purple;  
+  /* make sure it sits on top of everything */
+  z-index: 9999;
+}
