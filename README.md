@@ -97,6 +97,30 @@ Native setup:
 git clone https://github.com/your-username/your-repo-name.git
 cd your-repo-name
 ```
+### 📦 Install CLI Tools
+
+```bash
+npm install -g @angular/cli @ionic/cli
+```
+
+### 🔌 Add Capacitor
+
+```bash
+npm install @capacitor/core @capacitor/cli
+npx cap init
+```
+
+- App name: `MyMobileApp`
+- App ID: `com.example.mobileapp`
+
+### 📱 Add Platforms
+
+```bash
+npm run build
+npx cap add android
+# npx cap add ios  # macOS only
+npx cap sync
+```
 
 ### 📦 Install Dependencies
 
