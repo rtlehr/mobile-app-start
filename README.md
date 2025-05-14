@@ -107,6 +107,7 @@ npm install -g @angular/cli @ionic/cli
 
 ```bash
 npm install @capacitor/core @capacitor/cli
+npm install @capacitor/splash-screen
 npx cap init
 ```
 
